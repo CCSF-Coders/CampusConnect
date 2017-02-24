@@ -1,6 +1,7 @@
 .Container {
   justify-content: center;
   align-items: center;
-  font-family: sans-serif;
+  background-image: url(../../assets/CCSFClubs.png);
   flex: 1;
+  color: white
 }
