@@ -1,0 +1,10 @@
+#Header {
+  width: 100vw;
+  height: 60px;
+  background-color: pink;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  flex-direction: row;
+}

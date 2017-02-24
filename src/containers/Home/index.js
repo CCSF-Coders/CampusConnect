@@ -1,18 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import './index.css';
+import Login from '../../containers/Login/index';
+import Welcome from '../../components/Welcome/index';
 
 class Home extends React.Component {
   render() {
+    let Component = this.props.user ? Welcome : Login;
+    console.log('THIS.PROPS.USER', this.props.user)
     return (
-      <div className="Container">
-        <h1>CCSF Connect</h1>
-        <h3>Discover, Interact, and Explore</h3>
-        <p>An app created for CCSF Clubs</p>
-        <div className="g-signin2" data-onsuccess={() => {console.log('signed in!')}}></div>
-      </div>
+      <Component />
     );
   }
 }
 
-export default Home;
+function mapStateToProps({ user }) {
+  return {
+    user
+  };
+}
+
+export default connect(mapStateToProps)(Home);
