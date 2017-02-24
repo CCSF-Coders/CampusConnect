@@ -5,3 +5,7 @@
   flex: 1;
   color: white
 }
+
+.g-signin2, .g-signin2 * {
+  display: block;
+}
