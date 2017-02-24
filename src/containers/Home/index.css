@@ -1,0 +1,7 @@
+.Container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-width: medium;
+  align-items: center;
+}
