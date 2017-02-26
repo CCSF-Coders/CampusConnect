@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { setUser, setGoogleLoaded } from '../../actions/index';
+import { setUser, setGoogleLoaded } from '../../actions';
 
 import './index.css';
 

@@ -4,9 +4,9 @@ import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 
-import Home from '../../containers/Home/index'
+import Home from '../../containers/Home'
 
-import rootReducer from '../../reducers/index';
+import rootReducer from '../../reducers';
 
 import './index.css';
 

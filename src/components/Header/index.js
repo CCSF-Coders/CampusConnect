@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { resetUser } from '../../actions/index';
+import { resetUser } from '../../actions';
 import './index.css';
 
 class Header extends React.Component {

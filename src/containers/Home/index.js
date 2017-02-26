@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Login from '../../containers/Login/index';
-import Welcome from '../../components/Welcome/index';
+import Login from '../../containers/Login';
+import Welcome from '../../components/Welcome';
 
 class Home extends React.Component {
   render() {

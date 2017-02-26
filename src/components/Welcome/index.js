@@ -2,9 +2,9 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Header from '../Header/index';
+import Header from '../Header';
 
-import { setUser } from '../../actions/index';
+import { setUser } from '../../actions';
 
 import './index.css';
 
