@@ -8,8 +8,16 @@ class Header extends React.Component {
   render() {
     return (
       <div id="Header">
-        <p>CampusConnect</p>
-        <p onClick={() => this.signOut()}>Logout</p>
+        <p> CampusConnect </p>
+        <p> Edit Profile </p>
+        <p> Calendars </p>
+        <p> Browse Clubs </p>
+        <div class="form-group" id="form-margin">
+          <input type="text" class="form-control" placeholder="Search For Clubs" id="form-length"/>
+        </div>
+        <button type="Submit" className="btn btn-default"> Submit </button>
+        <p> Member Requests </p>
+        <p onClick={() => this.signOut()}> Logout </p>
       </div>
     );
   }
