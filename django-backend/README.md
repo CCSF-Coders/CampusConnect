@@ -1,11 +1,11 @@
 # Campus Connect's Django Backend
 
 [Programs and Modules to install](#Programs and Modules to install)  
-[First time running](#First time running)  
-[Starting the server](#Starting the server)  
-[Modifying the database](#Modifying the database)  
-[Testing API commands](#Testing API commands)  
-[Future stuff to add](#Future stuff to add)  
+[First time running](#first-time-running)  
+[Starting the server](#starting-the-server)  
+[Modifying the database](#modifying-the-database)  
+[Testing API commands](#testing-api-commands)  
+[Future stuff to add](#future-stuff-to add)  
 
 
 ## Programs and Modules to install
