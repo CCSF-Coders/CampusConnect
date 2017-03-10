@@ -15,18 +15,32 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from .secret_settings import SECRET_KEY
+try:
+    from .secret_key import SECRET_KEY
+# This will generate a secret key file. It's probably a pretty weak key which is fine for production, but for launch this should be replaced with a strong key.
+except ImportError:
+    import string
+    import random
+
+    chars = ''.join([string.ascii_letters, string.digits, string.punctuation]).replace('\'', '').replace('"',
+                                                                                                         '').replace(
+        '\\', '')
+    secret_key_string = '# This key should never be public\nSECRET_KEY = \'' + ''.join([random.SystemRandom().choice(chars) for i in range(50)])+'\''
+    handle1 = open('campus-connect/secret_key.py', 'w+')
+    handle1.write(secret_key_string)
+    handle1.close()
+    from .secret_key import SECRET_KEY
+
+# SECRET_KEY = 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -73,7 +87,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'campus-connect.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
@@ -83,7 +96,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -103,7 +115,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -116,7 +127,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

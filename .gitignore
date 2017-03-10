@@ -18,4 +18,5 @@ yarn-error.log*
 
 *.sqlite3
 django-backend/.idea/workspace.xml
-django-backend/campus-connect/secret_settings.py
+django-backend/campus-connect/secret_key.py
+django-backend/campus-connect/__pycache__
