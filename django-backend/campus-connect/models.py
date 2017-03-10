@@ -6,6 +6,9 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.conf import settings
 
+from django.contrib import admin
+
+
 # This code is triggered whenever a new user has been created and saved to the database
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
@@ -27,6 +30,9 @@ class Club(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        app_label = 'campus-connect'
+
 
 class Calendar(models.Model):
     name = models.CharField(max_length=64, default="")
@@ -37,3 +43,10 @@ class Calendar(models.Model):
 
     def __str__(self):
         return self.name + " at " + str(self.start)
+
+    class Meta:
+        app_label = 'campus-connect'
+        
+CUSTOM_MODELS = [Club, Calendar]
+
+admin.site.register(CUSTOM_MODELS)
