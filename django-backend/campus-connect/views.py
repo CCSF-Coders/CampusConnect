@@ -11,9 +11,11 @@ GET_NOT_ALLOWED_RESPONSE = "Method \"GET\" not allowed."
 ERROR_RESPONSE = "error"
 SUCCESS_RESPONSE = "success"
 
+# Homepage of website
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'index_example.html')
 
+# Get a list of clubs
 @csrf_exempt
 def clublist(request):
     response = None

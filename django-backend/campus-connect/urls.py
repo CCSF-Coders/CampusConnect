@@ -19,6 +19,7 @@ from . import views
 from rest_framework.authtoken import views as rest_views
 
 urlpatterns = [
+    url(r'', views.index),
     url(r'^admin/', admin.site.urls),
     #url(r'^api/register/', views.register),
     url(r'^api/clublist/', views.clublist),

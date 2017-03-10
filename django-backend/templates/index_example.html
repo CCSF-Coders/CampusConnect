@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block body %}
+	<h1>Campus Connect</h1>
+	
+	<p>You can change where this homepage points to by modifying the <i>index</i> function inside <i>/campus-connect/views.py</i>.</p>
+	
+	<h3>This is an image displayed without using Django Template Language. This pure HTML can work in any
+		file.</h3>
+	<img src="/static/img/ccsf_logo.png" alt="My image"/>
+
+	<h3>This is the same image displayed using Django Template Language. This expression will only work in files in the
+		templates folder</h3>
+	<img src="{% static "img/ccsf_logo.png" %}" alt="My image"/>
+
+{% endblock %}
