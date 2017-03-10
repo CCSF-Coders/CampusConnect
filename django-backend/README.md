@@ -1,10 +1,9 @@
-# Campus Connect
-## Club Finder App
-## By CCSF Coders Club
+# Campus Connect 
+### Django Backend
 
 [Python 3.5.2](https://www.python.org/downloads/release/python-352/)
 ## Modules
-Django - `pip install Django`
+Django - `pip install Django` 
 Rest Framework - `pip install djangorestframework`
 
 ## First time running
