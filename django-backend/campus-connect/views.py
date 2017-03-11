@@ -13,7 +13,8 @@ SUCCESS_RESPONSE = "success"
 
 # Homepage of website
 def index(request):
-    return render(request, 'index_example.html')
+    return render(request, 'index.html')
+    # return render(request, 'index_example.html')
 
 # Get a list of clubs
 @csrf_exempt
