@@ -21,7 +21,17 @@ from rest_framework.authtoken import views as rest_views
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^admin/', admin.site.urls),
-    #url(r'^api/register/', views.register),
-    url(r'^api/clublist/', views.clublist),
+    # url(r'^api/register/', views.register),
+
+    url(r'^api/clubs/', views.clubList),
+    url(r'^api/editclub/', views.editClub),
+
+    url(r'^api/calendar/', views.calendarList),
+    url(r'^api/editcalendar/', views.addEditCalendar),
+
+    url(r'^api/users/', views.userList),
+    url(r'^api/edituser/', views.editUser),
+    url(r'^api/adduser/', views.addUser),
+
     url(r'^api/token/', rest_views.obtain_auth_token),
 ]

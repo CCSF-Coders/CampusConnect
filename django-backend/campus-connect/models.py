@@ -36,13 +36,13 @@ class Club(models.Model):
 
 class Calendar(models.Model):
     name = models.CharField(max_length=64, default="")
-    description = models.CharField(max_length=512, default="")
-    club = models.ForeignKey(Club)
-    start = models.DateTimeField(default=None)
-    end = models.DateTimeField(default=None)
+    description = models.CharField(max_length=512, default="", blank=True)
+    club = models.ForeignKey(Club, related_name='president_of_club', default=None, null=True, blank=True)
+    start_date_time = models.DateTimeField(default=None)
+    end_date_time = models.DateTimeField(default=None)
 
     def __str__(self):
-        return self.name + " at " + str(self.start)
+        return self.name + " at " + str(self.start_date_time)
 
     class Meta:
         app_label = 'campus-connect'
