@@ -3,7 +3,7 @@ from django.shortcuts import render
 from . import models
 from django.views.decorators.csrf import csrf_exempt
 # from .forms import UserForm
-from .models import Club, User, Calendar
+from .models import Club, User, Token, Calendar
 from django.core import serializers
 from django.forms.models import model_to_dict
 from django.db.models import Q
@@ -13,6 +13,7 @@ GET_NOT_ALLOWED_RESPONSE = "Method \"GET\" not allowed."
 ERROR_RESPONSE = "error"
 SUCCESS_RESPONSE = "success"
 NOT_IMPLEMENTED_ERROR = "feature not implemented yet"
+
 
 # returns None if token is a mismatch
 def getIDFromToken(id):
@@ -43,9 +44,11 @@ def clubList(request):
 
     return response
 
+
 @csrf_exempt
 def editUser(request):
     return JsonResponse({"status": ERROR_RESPONSE, "detail": NOT_IMPLEMENTED_ERROR})
+
 
 @csrf_exempt
 def addUser(request):
@@ -102,6 +105,7 @@ def editClub(request):
     else:
         return JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
 
+
 @csrf_exempt
 def calendarList(request):
     if request.method == 'POST':
@@ -120,10 +124,10 @@ def calendarList(request):
     else:
         return JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
 
+
 @csrf_exempt
 def addEditCalendar(request):
     return JsonResponse({"status": ERROR_RESPONSE, "detail": NOT_IMPLEMENTED_ERROR})
-
 
 
 @csrf_exempt
