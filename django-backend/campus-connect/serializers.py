@@ -38,6 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    
 
     class Meta:
         model = Student
@@ -84,6 +85,7 @@ class BaseClubSerializer(serializers.ModelSerializer):
             raise exceptions.AuthenticationFailed(detail="User is not staff", code=None)
         elif staff_status is None:
             raise exceptions.AuthenticationFailed(detail="User does not exist", code=None)
+
 
 
 class ClubSerializer(BaseClubSerializer):

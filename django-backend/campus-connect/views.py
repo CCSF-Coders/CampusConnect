@@ -29,7 +29,24 @@ def index(request):
     # return render(request, 'index_example.html')
 
 
-class ListClubViewSet(viewsets.ModelViewSet, UpdateOnlyMixin):
+'''
+    The definition of ModelViewSet is:
+
+    class ModelViewSet(mixins.CreateModelMixin, 
+                       mixins.RetrieveModelMixin, 
+                       mixins.UpdateModelMixin,
+                       mixins.DestroyModelMixin,
+                       mixins.ListModelMixin,
+                       GenericViewSet)
+
+    Use whatever you need
+'''
+
+class ListClubViewSet(mixins.CreateModelMixin, 
+                       mixins.RetrieveModelMixin, 
+                       mixins.UpdateModelMixin,
+                       mixins.ListModelMixin,
+                       viewsets.GenericViewSet):
     """
     All the clubs.
     """
