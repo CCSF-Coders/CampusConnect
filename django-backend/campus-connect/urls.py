@@ -23,13 +23,9 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
-router.register(r'list-clubs', views.ListClubViewSet, 'View Clubs')
-router.register(r'list-students', views.ListStudentViewSet, 'View Students')
-router.register(r'list-events', views.ListEventViewSet, 'View Events')
-
-#router.register(r'edit-clubs', views.EditClubViewSet, 'Edit Clubs')
-#router.register(r'edit-users', views.EditUserViewSet, 'Edit Users')
-
+router.register(r'clubs', views.ClubViewSet, 'List and Edit Clubs')
+router.register(r'students', views.StudentViewSet, 'List and Edit Students')
+router.register(r'events', views.EventViewSet, 'List and Edit Events')
 
 urlpatterns = [
 
@@ -38,10 +34,5 @@ urlpatterns = [
     url(r'^rest-api/', include(router.urls), name="Rest API"),
     url(r'^token/', rest_views.obtain_auth_token, name="User Token (login)"),
     url(r'^docs/', include_docs_urls()),
-    # url(r'^rest-apiT/clubs', views.ClubViewSet.as_view()),
-    # url(r'^rest-apiT/users', views.UserViewSet.as_view()),
 
-    # url(r'^api/register/', views.register),
-
-    # url(r'^api/', include('campus-connect.urls_api', namespace="campus-connect:api")),
 ]

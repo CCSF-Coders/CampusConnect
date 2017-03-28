@@ -42,206 +42,133 @@ def index(request):
     Use whatever you need
 '''
 
-class ListClubViewSet(mixins.CreateModelMixin, 
-                       mixins.RetrieveModelMixin, 
-                       mixins.UpdateModelMixin,
-                       mixins.ListModelMixin,
-                       viewsets.GenericViewSet):
+
+class ClubViewSet(mixins.CreateModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     """
-    All the clubs.
+    This is how data about Clubs is accessed
+    
+    GET:
+    /rest-api/clubs
+    This will list all the clubs if no parameters are specified.
+    optional params: name (contains)
+    e.g. /rest-api/clubs/?name=coders
+    
+    POST:
+    /rest-api/clubs
+    This will create a club if the user is flagged as staff.
+    required params: token, name
+    optional params: email, website, meeting times
+    
+    POST:
+    /rest-api/clubs/<club_id>
+    This will update a club if the user is flagged as staff or an officer of that club.
+    required params: token
+    optional params: name, email, website, meeting_times  
+    
     """
 
     queryset = Club.objects.all()
     serializer_class = ClubSerializer
-    # update_serializer_class = UpdateClubSerializer
+    search_fields = ('name',)
+
+    def get_queryset(self):
+        """
+        Allows filtering of the data
+        """
+        queryset = Club.objects.all()
+        name = self.request.query_params.get('name', None)
+
+        if name is not None:
+            queryset = queryset.filter(name__contains=name)
+
+        return queryset
 
 
-class ListStudentViewSet(mixins.RetrieveModelMixin,
-                         mixins.UpdateModelMixin,
-                         mixins.ListModelMixin,
-                         viewsets.GenericViewSet):
+class StudentViewSet(mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.ListModelMixin,
+                     viewsets.GenericViewSet):
     """
-    All the users
-    """
+     This will list the Students. The Students is a table that has a One-to-One relationship with the Users table.
+     Students and Users have their own separate ids.
+
+     GET:
+     /rest-api/students
+     This will list all the clubs if no parameters are specified.
+     optional params: username, email, first_name (contains), last_name (contains)
+     e.g. /rest-api/students/?first_name=ryan
+     
+     """
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
+    def get_queryset(self):
+        """
+        Allows filtering of the data
+        """
+        queryset = Student.objects.all()
+        username = self.request.query_params.get('username', None)
+        email = self.request.query_params.get('email', None)
+        first_name = self.request.query_params.get('first_name', None)
+        last_name = self.request.query_params.get('last_name', None)
 
-class ListEventViewSet(viewsets.ModelViewSet):
+        if username is not None:
+            queryset = queryset.filter(user__username=username)
+        if email is not None:
+            queryset = queryset.filter(user__email=email)
+        if first_name is not None:
+            queryset = queryset.filter(user__first_name__contains=first_name)
+        if last_name is not None:
+            queryset = queryset.filter(user__last_name__contains=last_name)
+
+        return queryset
+
+
+class EventViewSet(viewsets.ModelViewSet):
     """
-    All the Events
+    This is how data about Events is accessed
+
+    GET:
+    /rest-api/events
+    This will list all the events if no parameters are specified. Specifying a start_date will filter for events that
+    start after that date and time, and specifying an end_date will filter for events that end after that date and time.
+    optional params: club_id, start_date, end_date
+    e.g. /rest-api/events/?start_date=2017-03-29&end_date=2017-03-29
+
+    POST:
+    /rest-api/events
+    This will create an event if the user is flagged as staff or an officer of that club.
+    required params: token, club_id, name, start_date, end_date
+    optional params: description
+
+    POST:
+    /rest-api/events/<event_id>
+    This will update an event if the user is flagged as staff or an officer of that club.
+    required params: token
+    optional params: name, email, website, meeting_times  
+
     """
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
+    def get_queryset(self):
+        """
+        Allows filtering of the data
+        """
+        queryset = Event.objects.all()
+        club_id = self.request.query_params.get('club_id', None)
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
 
-'''
-@csrf_exempt
-def clubList(request):
-    """
-    
-    get: Gives an error. POST is required.
-    
-    post: Returns a list of clubs
-    
-    """
-    if request.method == 'POST':
-        post_name = request.POST.get("name", "")
-        clublist = Club.objects.filter(name__contains=post_name).values()
-        response = JsonResponse({"status": SUCCESS_RESPONSE, 'clubs': list(clublist)})
-    else:
-        response = JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
+        if club_id is not None:
+            queryset = queryset.filter(club_id=club_id)
+        if start_date is not None:
+            queryset = queryset.filter(start_date_time__gt=start_date)
+        if end_date is not None:
+            queryset = queryset.filter(end_date_time__lt=end_date)
 
-    return response
-
-
-@csrf_exempt
-def editUser(request):
-    return JsonResponse({"status": ERROR_RESPONSE, "detail": NOT_IMPLEMENTED_ERROR})
-
-
-@csrf_exempt
-def addUser(request):
-    return JsonResponse({"status": ERROR_RESPONSE, "detail": NOT_IMPLEMENTED_ERROR})
-
-
-
-    URL: api/editclub/
-    Type: POST
-    Input Parameters:
-        int id: The id of club you want to edit
-        string token: The token that the user used to login. They must be an officer of the club to make changes to it.
-        string name: Name of the club
-        string email: Email of the club
-        string meetingTimes: Times the club has regular meetings
-        string website: Website of the club
-    Output JSON:
-        status: The status of the request.
-        clubs: If status  = success, then this will be a list of dictionaries of the club(s) that were altered. This is a 
-            list, despite expecting one result, to maintain consistency with all the other views.
-        error: If status = error, this will explain the reason why.
-
-
-
-@csrf_exempt
-def editClub(request):
-    if request.method == 'POST':
-        post_id = request.POST.get("id", None)
-        post_token = request.POST.get("token", None)
-        if post_id == None:
-            return JsonResponse({"status": ERROR_RESPONSE, "detail": "id not specified"})
-        elif post_token == None:
-            return JsonResponse({"status": ERROR_RESPONSE, "detail": "token not specified"})
-        else:
-            try:
-                selected_club = Club.objects.get(id=post_id)
-            except ObjectDoesNotExist:
-                selected_club = None
-            if selected_club == None:
-                return JsonResponse({"status": ERROR_RESPONSE, "detail": "Club id " + str(post_id) + " does not exist"})
-
-            user_id = getIDFromToken(post_token)
-            if user_id == None:
-                return JsonResponse({"status": ERROR_RESPONSE, "detail": "invalid token"})
-
-            club_leaders = list()
-            if selected_club.president != None:
-                club_leaders.append(selected_club.president.id)
-            if selected_club.treasurer != None:
-                club_leaders.append(selected_club.treasurer.id)
-            if selected_club.icc_rep != None:
-                club_leaders.append(selected_club.icc_rep.id)
-
-            if user_id in club_leaders:
-                post_name = request.POST.get("name", None)
-                post_email = request.POST.get("email", None)
-                post_meeting_times = request.POST.get("meetingTimes", None)
-                post_website = request.POST.get("website", None)
-
-                Club.objects.filter(id=post_id) \
-                    .update(name=post_name,
-                            email=post_email,
-                            meeting_times=post_meeting_times,
-                            website=post_website)
-                updated_club = Club.objects.filter(id=post_id).values()
-                return JsonResponse({"status": SUCCESS_RESPONSE, 'clubs': list(updated_club)})
-
-            else:
-                return JsonResponse({"status": ERROR_RESPONSE, "detail": "user not authorized to edit club"})
-
-
-    else:
-        return JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
-
-
-"""
-    URL: api/calendar/
-    Type: POST
-    Input Parameters:
-        datetime afterDateTime: The time and date before the event starts
-        datetime beforeDateTime: The time and date after the event ends
-        string name: Filter for clubs containing this name
-    Output JSON:
-        status: The status of the request.
-        calendar: If status  = success, then this will be a list of dictionaries of all the events.
-        error: If status = error, this will explain the reason why.
-"""
-
-
-@csrf_exempt
-def calendarList(request):
-    if request.method == 'POST':
-        post_after_datetime = request.POST.get("afterDateTime", None)
-        post_before_datetime = request.POST.get("beforeDateTime", None)
-        post_club_id = request.POST.get("clubName", None)
-
-        if None in [post_after_datetime, post_before_datetime]:
-            return JsonResponse(
-                {"status": ERROR_RESPONSE, "detail": "Must specify afterDateTime, beforeDateTime"})
-
-        calendar_list = Calendar.objects.values().filter(
-            start_date_time__gte=post_before_datetime,
-            end_date_time__gte=post_after_datetime)
-
-        if None != post_club_id:
-            calendar_list = calendar_list.filter(club=post_club_id)
-
-        return JsonResponse({"status": SUCCESS_RESPONSE, 'calendar': list(calendar_list)})
-    else:
-        return JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
-
-
-@csrf_exempt
-def addEditCalendar(request):
-    return JsonResponse({"status": ERROR_RESPONSE, "detail": NOT_IMPLEMENTED_ERROR})
-
-
-"""
-    URL: api/users/
-    Type: POST
-    Input Parameters:
-        int id: The id of the user
-    Output JSON:
-        status: The status of the request.
-        detail: If status  = success, then this will be a list of dictionaries of users.
-            id
-            username
-            first_name
-            last_name
-            email
-        error: If status = error, this will explain the reason why.
-"""
-
-
-@csrf_exempt
-def userList(request):
-    if request.method == 'POST':
-        post_id = request.POST.get("id", None)
-        if post_id == None:
-            return JsonResponse({"status": ERROR_RESPONSE, "detail": "id not specified"})
-
-        users = StudentUser.objects.filter(id=post_id).values("id", "username", "first_name", "last_name", "email")
-        return JsonResponse({"status": SUCCESS_RESPONSE, 'users': list(users)})
-    else:
-        return JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
-'''
+        return queryset

@@ -22,7 +22,7 @@ class Club(models.Model):
     Stores the general information for each Club
     :model:`campus-connect.Club`
     """
-    name = models.CharField(max_length=64, default="")
+    name = models.CharField(max_length=64, default="", unique=True)
     email = models.EmailField(max_length=128, blank=True, null=True)
     website = models.URLField(max_length=256, blank=True, null=True)
     meeting_times = models.CharField(max_length=256, blank=True, null=True)
