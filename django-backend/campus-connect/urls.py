@@ -16,22 +16,32 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from . import views
+from rest_framework.documentation import include_docs_urls
+from django.conf.urls import include
 from rest_framework.authtoken import views as rest_views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+
+router.register(r'list-clubs', views.ListClubViewSet, 'View Clubs')
+router.register(r'list-students', views.ListStudentViewSet, 'View Students')
+router.register(r'list-events', views.ListEventViewSet, 'View Events')
+
+#router.register(r'edit-clubs', views.EditClubViewSet, 'Edit Clubs')
+#router.register(r'edit-users', views.EditUserViewSet, 'Edit Users')
+
 
 urlpatterns = [
-    url(r'^$', views.index),
+
+    url(r'^$', views.index, name="Homepage"),
     url(r'^admin/', admin.site.urls),
+    url(r'^rest-api/', include(router.urls), name="Rest API"),
+    url(r'^token/', rest_views.obtain_auth_token, name="User Token (login)"),
+    url(r'^docs/', include_docs_urls()),
+    # url(r'^rest-apiT/clubs', views.ClubViewSet.as_view()),
+    # url(r'^rest-apiT/users', views.UserViewSet.as_view()),
+
     # url(r'^api/register/', views.register),
 
-    url(r'^api/clubs/', views.clubList),
-    url(r'^api/editclub/', views.editClub),
-
-    url(r'^api/calendar/', views.calendarList),
-    url(r'^api/editcalendar/', views.addEditCalendar),
-
-    url(r'^api/users/', views.userList),
-    url(r'^api/edituser/', views.editUser),
-    url(r'^api/adduser/', views.addUser),
-
-    url(r'^api/token/', rest_views.obtain_auth_token),
+    # url(r'^api/', include('campus-connect.urls_api', namespace="campus-connect:api")),
 ]

@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+# from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.conf import settings
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.contrib import admin
 
 
@@ -17,15 +18,14 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class Club(models.Model):
+    """
+    Stores the general information for each Club
+    :model:`campus-connect.Club`
+    """
     name = models.CharField(max_length=64, default="")
     email = models.EmailField(max_length=128, blank=True, null=True)
     website = models.URLField(max_length=256, blank=True, null=True)
     meeting_times = models.CharField(max_length=256, blank=True, null=True)
-
-    # officers that can manage the club
-    president = models.ForeignKey(User, related_name='president_of_club', default=None, null=True, blank=True)
-    treasurer = models.ForeignKey(User, related_name='treasurer_of_club', default=None, null=True, blank=True)
-    icc_rep = models.ForeignKey(User, related_name='icc_rep_of_club', default=None, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -34,7 +34,30 @@ class Club(models.Model):
         app_label = 'campus-connect'
 
 
-class Calendar(models.Model):
+class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    officer_of_club = models.ForeignKey(Club, related_name='officers', default=None, null=True, blank=True,)
+    officer_role = models.CharField(max_length=64, default=None, null=True, blank=True,)
+    member_of_clubs = models.ManyToManyField(Club, related_name='members', default=None, blank=True,)
+    
+    def __str__(self):
+        return str(self.user)
+
+    class Meta:
+        app_label = 'campus-connect'
+    
+    
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Student.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.student.save()
+
+
+class Event(models.Model):
     name = models.CharField(max_length=64, default="")
     description = models.CharField(max_length=512, default="", blank=True)
     club = models.ForeignKey(Club, related_name='president_of_club', default=None, null=True, blank=True)
@@ -46,7 +69,8 @@ class Calendar(models.Model):
 
     class Meta:
         app_label = 'campus-connect'
-        
-CUSTOM_MODELS = [Club, Calendar]
+
+
+CUSTOM_MODELS = [Club, Event, Student, ]
 
 admin.site.register(CUSTOM_MODELS)

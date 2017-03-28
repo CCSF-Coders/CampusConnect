@@ -29,7 +29,8 @@ except ImportError:
     chars = ''.join([string.ascii_letters, string.digits, string.punctuation]).replace('\'', '').replace('"',
                                                                                                          '').replace(
         '\\', '')
-    secret_key_string = '# This key should never be public\nSECRET_KEY = \'' + ''.join([random.SystemRandom().choice(chars) for i in range(50)])+'\''
+    secret_key_string = '# This key should never be public\nSECRET_KEY = \'' + ''.join(
+        [random.SystemRandom().choice(chars) for i in range(50)]) + '\''
     handle1 = open('campus-connect/secret_key.py', 'w+')
     handle1.write(secret_key_string)
     handle1.close()
@@ -41,6 +42,7 @@ except ImportError:
 DEBUG = True
 
 ALLOWED_HOSTS = []
+#AUTH_USER_MODEL = "campus-connect.StudentUser"
 
 # Application definition
 
@@ -51,9 +53,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #'django.contrib.admindocs',
     'rest_framework',
     'rest_framework.authtoken',
     'campus-connect',
+
 ]
 
 MIDDLEWARE = [

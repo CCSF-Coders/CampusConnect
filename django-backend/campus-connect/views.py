@@ -3,11 +3,16 @@ from django.shortcuts import render
 from . import models
 from django.views.decorators.csrf import csrf_exempt
 # from .forms import UserForm
-from .models import Club, User, Token, Calendar
+from .models import Club, Token, Event, Student
+from django.contrib.auth.models import User
 from django.core import serializers
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import viewsets, permissions, mixins
+from rest_framework.response import Response
+from .serializers import ClubSerializer, UserSerializer, StudentSerializer, EventSerializer
+from .mixins import UpdateOnlyMixin
 
 GET_NOT_ALLOWED_RESPONSE = "Method \"GET\" not allowed."
 ERROR_RESPONSE = "error"
@@ -15,26 +20,54 @@ SUCCESS_RESPONSE = "success"
 NOT_IMPLEMENTED_ERROR = "feature not implemented yet"
 
 
-# returns None if token is a mismatch
-def getIDFromToken(id):
-    try:
-        token_search = Token.objects.get(key=id)
-        token = token_search.user_id
-    except ObjectDoesNotExist:
-        token = None
-
-    return token
-
-
-# Homepage of website
 def index(request):
+    """
+    The homepage of the website.
+    :view:`campus-connect.index`
+    """
     return render(request, 'index.html')
     # return render(request, 'index_example.html')
 
 
-# Get a list of clubs
+class ListClubViewSet(viewsets.ModelViewSet, UpdateOnlyMixin):
+    """
+    All the clubs.
+    """
+
+    queryset = Club.objects.all()
+    serializer_class = ClubSerializer
+    # update_serializer_class = UpdateClubSerializer
+
+
+class ListStudentViewSet(mixins.RetrieveModelMixin,
+                         mixins.UpdateModelMixin,
+                         mixins.ListModelMixin,
+                         viewsets.GenericViewSet):
+    """
+    All the users
+    """
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+class ListEventViewSet(viewsets.ModelViewSet):
+    """
+    All the Events
+    """
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+
+'''
 @csrf_exempt
 def clubList(request):
+    """
+    
+    get: Gives an error. POST is required.
+    
+    post: Returns a list of clubs
+    
+    """
     if request.method == 'POST':
         post_name = request.POST.get("name", "")
         clublist = Club.objects.filter(name__contains=post_name).values()
@@ -53,6 +86,24 @@ def editUser(request):
 @csrf_exempt
 def addUser(request):
     return JsonResponse({"status": ERROR_RESPONSE, "detail": NOT_IMPLEMENTED_ERROR})
+
+
+
+    URL: api/editclub/
+    Type: POST
+    Input Parameters:
+        int id: The id of club you want to edit
+        string token: The token that the user used to login. They must be an officer of the club to make changes to it.
+        string name: Name of the club
+        string email: Email of the club
+        string meetingTimes: Times the club has regular meetings
+        string website: Website of the club
+    Output JSON:
+        status: The status of the request.
+        clubs: If status  = success, then this will be a list of dictionaries of the club(s) that were altered. This is a 
+            list, despite expecting one result, to maintain consistency with all the other views.
+        error: If status = error, this will explain the reason why.
+
 
 
 @csrf_exempt
@@ -106,20 +157,38 @@ def editClub(request):
         return JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
 
 
+"""
+    URL: api/calendar/
+    Type: POST
+    Input Parameters:
+        datetime afterDateTime: The time and date before the event starts
+        datetime beforeDateTime: The time and date after the event ends
+        string name: Filter for clubs containing this name
+    Output JSON:
+        status: The status of the request.
+        calendar: If status  = success, then this will be a list of dictionaries of all the events.
+        error: If status = error, this will explain the reason why.
+"""
+
+
 @csrf_exempt
 def calendarList(request):
     if request.method == 'POST':
         post_after_datetime = request.POST.get("afterDateTime", None)
         post_before_datetime = request.POST.get("beforeDateTime", None)
-        post_club_name = request.POST.get("clubName", None)
+        post_club_id = request.POST.get("clubName", None)
 
-        if (None in [post_after_datetime, post_before_datetime, post_club_name]):
+        if None in [post_after_datetime, post_before_datetime]:
             return JsonResponse(
-                {"status": ERROR_RESPONSE, "detail": "Must specify afterDateTime, beforeDateTime, and clubName"})
+                {"status": ERROR_RESPONSE, "detail": "Must specify afterDateTime, beforeDateTime"})
 
-        calendar_list = Calendar.objects.values().filter(club__name__contains=post_club_name,
-                                                         start_date_time__gte=post_after_datetime,
-                                                         end_date_time__gte=post_before_datetime)
+        calendar_list = Calendar.objects.values().filter(
+            start_date_time__gte=post_before_datetime,
+            end_date_time__gte=post_after_datetime)
+
+        if None != post_club_id:
+            calendar_list = calendar_list.filter(club=post_club_id)
+
         return JsonResponse({"status": SUCCESS_RESPONSE, 'calendar': list(calendar_list)})
     else:
         return JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
@@ -130,6 +199,23 @@ def addEditCalendar(request):
     return JsonResponse({"status": ERROR_RESPONSE, "detail": NOT_IMPLEMENTED_ERROR})
 
 
+"""
+    URL: api/users/
+    Type: POST
+    Input Parameters:
+        int id: The id of the user
+    Output JSON:
+        status: The status of the request.
+        detail: If status  = success, then this will be a list of dictionaries of users.
+            id
+            username
+            first_name
+            last_name
+            email
+        error: If status = error, this will explain the reason why.
+"""
+
+
 @csrf_exempt
 def userList(request):
     if request.method == 'POST':
@@ -137,7 +223,8 @@ def userList(request):
         if post_id == None:
             return JsonResponse({"status": ERROR_RESPONSE, "detail": "id not specified"})
 
-        users = User.objects.filter(id=post_id).values("id", "username", "first_name", "last_name", "email")
+        users = StudentUser.objects.filter(id=post_id).values("id", "username", "first_name", "last_name", "email")
         return JsonResponse({"status": SUCCESS_RESPONSE, 'users': list(users)})
     else:
         return JsonResponse({"status": ERROR_RESPONSE, "detail": GET_NOT_ALLOWED_RESPONSE})
+'''

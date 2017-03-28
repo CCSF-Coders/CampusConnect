@@ -10,11 +10,14 @@
 
 ## Programs and Modules to install
 
-[Python 3.5.2](https://www.python.org/downloads/release/python-352/)
+[Python 3.6.1](https://www.python.org/downloads/release/python-361/)
 
-Django - `pip install Django`
+Django - `pip install Django`  
+Rest Framework - `pip install djangorestframework`  
+Rest Documentation - `pip install coreapi`  
+Docutils - `pip install docutils`
 
-Rest Framework - `pip install djangorestframework`
+All: `pip install Django djangorestframework coreapi docutils`
 
 
 ## First time running
@@ -32,13 +35,12 @@ This will create a super user, which has full access to edit everything on the s
 Navigate to [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) login with the superuser you've created.
 
 ## Testing API commands
-Using login info to get the user token  
-`curl --data "login=<your_login>&password=<your_password>"  http://127.0.0.1:8000/api/token/`
+Navigate to [http://127.0.0.1:8000/rest-api/](http://127.0.0.1:8000/rest-api/)
 
-Listing the clubs (work in progress)  
-`curl --data "" http://127.0.0.1:8000/api/clublist/`
+## Logging in
+Logging in requires retrieving a token, then storing it and using it for future API requests that need it.  
+`curl --data "username=<user>&password=<password>" http://127.0.0.1:8000/token/`
 
 ## Future stuff to add
  * Registering using the API
- * Using the token to modify Clubs and the Calendar
  * Having the token be dynamic; being generated every time you login and being destroyed when logging out or after a certain amount of time.
