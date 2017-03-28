@@ -20,6 +20,8 @@ from rest_framework.documentation import include_docs_urls
 from django.conf.urls import include
 from rest_framework.authtoken import views as rest_views
 from rest_framework.routers import DefaultRouter
+from django.views.decorators.cache import cache_page
+from django.conf import settings
 
 router = DefaultRouter()
 
@@ -29,10 +31,11 @@ router.register(r'events', views.EventViewSet, 'List and Edit Events')
 
 urlpatterns = [
 
-    url(r'^$', views.index, name="Homepage"),
+    url(r'^$', cache_page(1)(views.index), name="Homepage"),
     url(r'^admin/', admin.site.urls),
     url(r'^rest-api/', include(router.urls), name="Rest API"),
     url(r'^token/', rest_views.obtain_auth_token, name="User Token (login)"),
     url(r'^docs/', include_docs_urls()),
+    #url(r'', cache_page(1)(views.IndexView.as_view()), name='index'),
 
 ]

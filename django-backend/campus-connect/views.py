@@ -12,7 +12,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
 from .serializers import ClubSerializer, UserSerializer, StudentSerializer, EventSerializer
+from django.views.generic import View
+import os
 from .mixins import UpdateOnlyMixin
+from django.conf import settings
 
 GET_NOT_ALLOWED_RESPONSE = "Method \"GET\" not allowed."
 ERROR_RESPONSE = "error"
@@ -25,7 +28,10 @@ def index(request):
     The homepage of the website.
     :view:`campus-connect.index`
     """
-    return render(request, 'index.html')
+
+    abspath = open(os.path.join(settings.BASE_DIR, 'campus-connect/static/index.html'), 'r')
+    return HttpResponse(content=abspath.read())
+    #return render(request, 'index.html')
     # return render(request, 'index_example.html')
 
 
