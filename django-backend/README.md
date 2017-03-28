@@ -5,6 +5,7 @@
 [Starting the server](#starting-the-server)  
 [Modifying the database](#modifying-the-database)  
 [Testing API commands](#testing-api-commands)  
+[Loggin In](#logging-in)  
 [Future stuff to add](#future-stuff-to add)  
 
 
