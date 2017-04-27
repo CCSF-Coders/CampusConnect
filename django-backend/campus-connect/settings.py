@@ -42,7 +42,6 @@ except ImportError:
 DEBUG = True
 
 ALLOWED_HOSTS = []
-#AUTH_USER_MODEL = "campus-connect.StudentUser"
 
 # Application definition
 
