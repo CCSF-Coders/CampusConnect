@@ -8,16 +8,9 @@ class Header extends React.Component {
   render() {
     return (
       <div id="Header">
-        <p> CampusConnect </p>
-        <p> Edit Profile </p>
-        <p> Calendars </p>
-        <p> Browse Clubs </p>
-        <div class="form-group" id="form-margin">
-          <input type="text" class="form-control" placeholder="Search For Clubs" id="form-length"/>
+        <div style={{ flex: 1 }}>
+          <p onClick={() => this.signOut()}> Logout </p>
         </div>
-        <button type="Submit" className="btn btn-default"> Submit </button>
-        <p> Member Requests </p>
-        <p onClick={() => this.signOut()}> Logout </p>
       </div>
     );
   }
@@ -32,9 +25,12 @@ class Header extends React.Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    resetUser
-  }, dispatch);
+  return bindActionCreators(
+    {
+      resetUser
+    },
+    dispatch
+  );
 }
 
 export default connect(null, mapDispatchToProps)(Header);
