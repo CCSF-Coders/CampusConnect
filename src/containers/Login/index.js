@@ -1,9 +1,8 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import GoogleLogin from 'react-google-login';
 
-import { setUser, setGoogleLoaded } from '../../actions';
+import { setState } from '../../state';
 
 import './index.css';
 
@@ -25,32 +24,11 @@ class Login extends React.Component {
   }
 
   onSignIn = googleUser => {
-    console.log('googleUser', googleUser)
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    this.props.setUser({
-      id: profile.getId(),
-      name: profile.getName(),
-      imageUrl: profile.getImageUrl(),
-      email: profile.getEmail()
-    });
+    this.props.setState({ user: googleUser.getBasicProfile() });
   }
 }
 
-function mapStateToProps({ googleLoaded }) {
-  return {
-    googleLoaded
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    setUser,
-    setGoogleLoaded
-  }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(
+  state => ({ state }),
+  dispatch => ({ setState: state => dispatch(setState(state)) })
+)(Login);

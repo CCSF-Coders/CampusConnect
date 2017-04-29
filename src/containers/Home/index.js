@@ -3,21 +3,19 @@ import { connect } from 'react-redux';
 
 import Login from '../../containers/Login';
 import Welcome from '../../components/Welcome';
+import { setState } from '../../state';
 
 class Home extends React.Component {
   render() {
-    let Component = this.props.user ? Welcome : Login;
-    console.log('THIS.PROPS.USER', this.props.user)
+    let { state } = this.props;
+    let Component = state.user ? Welcome : Login;
     return (
       <Component />
     );
   }
 }
 
-function mapStateToProps({ user }) {
-  return {
-    user
-  };
-}
-
-export default connect(mapStateToProps)(Home);
+export default connect(
+  state => ({ state }),
+  dispatch => ({ setState: state => dispatch(setState(state)) })
+)(Home);

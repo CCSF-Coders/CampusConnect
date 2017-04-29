@@ -1,7 +1,6 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { resetUser } from '../../actions';
+import { setState } from '../../state';
 import './index.css';
 
 class Header extends React.Component {
@@ -24,13 +23,7 @@ class Header extends React.Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      resetUser
-    },
-    dispatch
-  );
-}
-
-export default connect(null, mapDispatchToProps)(Header);
+export default connect(
+  null,
+  dispatch => ({ setState: state => dispatch(setState(state)) })
+)(Header);

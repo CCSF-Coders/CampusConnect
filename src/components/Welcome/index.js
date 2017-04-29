@@ -1,36 +1,35 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import BigCalendar from 'react-big-calendar';
+import moment from 'moment';
 
 import Header from '../Header';
-import { setUser } from '../../actions';
+import { setState } from '../../state';
 
 import './index.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+BigCalendar.momentLocalizer(moment)
 
 class Login extends React.Component {
   render() {
+    let { state } = this.props;
     return (
       <div className="Welcome">
         <Header />
-        <h1>Welcome</h1>
-        <h1>{this.props.user.name}</h1>
-        {/* <BigCalendar /> */}
+        {/* <h1>Welcome</h1>
+        <h1>{state.user.name}</h1> */}
+        <div style={{ border: '1px solid black', width: '900px', height: '500px' }}>
+          <BigCalendar
+            events={[]}
+          />
+        </div>
       </div>
     );
   }
 }
 
-function mapStateToProps({ user }) {
-  return {
-    user
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    setUser
-  }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(
+  state => ({ state }),
+  dispatch => ({ setState: state => dispatch(setState(state)) })
+)(Login);

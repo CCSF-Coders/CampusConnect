@@ -1,25 +1,20 @@
 import React from 'react';
-import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import { Router, Route, browserHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
+import { Route } from 'react-router'
+import { BrowserRouter } from 'react-router-dom'
 
 import Home from '../../containers/Home'
-
-import rootReducer from '../../reducers';
-
+import { store } from '../../state';
 import './index.css';
 
-const store = createStore(rootReducer);
-const history = syncHistoryWithStore(browserHistory, store)
 
 class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <Router history={history}>
+        <BrowserRouter>
           <Route path="/" component={Home}></Route>
-        </Router>
+        </BrowserRouter>
       </Provider>
     );
   }
