@@ -5,7 +5,8 @@ const SET_STATE = 'SET_STATE';
 const defaultState = {
   user: {
     name: 'Michael Leung'
-  }
+  },
+  clubs: []
 };
 
 const setState = function(state) {
