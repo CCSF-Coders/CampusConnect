@@ -1,23 +1,31 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { resetUser } from '../../actions';
+import { setState } from '../../state';
 import './index.css';
 
 class Header extends React.Component {
   render() {
     return (
       <div id="Header">
-        <p> CampusConnect </p>
-        <p> Edit Profile </p>
-        <p> Calendars </p>
-        <p> Browse Clubs </p>
-        <div class="form-group" id="form-margin">
-          <input type="text" class="form-control" placeholder="Search For Clubs" id="form-length"/>
+        <div style={{ flex: 1, alignItems: 'center' }}>
+          <p className="button" onClick={() => this.signOut()}>Logout</p>
         </div>
-        <button type="Submit" className="btn btn-default"> Submit </button>
-        <p> Member Requests </p>
-        <p onClick={() => this.signOut()}> Logout </p>
+        <div style={{ flex: 1, alignItems: 'center' }}>
+          <Link to="/">
+            <p className="button" onClick={() => {}}>Calendar</p>
+          </Link>
+        </div>
+        <div style={{ flex: 1, alignItems: 'center' }}>
+          <Link to="/findclubs">
+            <p className="button" onClick={() => {}}>Find Clubs</p>
+          </Link>
+        </div>
+        <div style={{ flex: 1, alignItems: 'center' }}>
+          <Link to="/yourclubs">
+            <p className="button" onClick={() => {}}>Your Clubs</p>
+          </Link>
+        </div>
       </div>
     );
   }
@@ -31,10 +39,7 @@ class Header extends React.Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    resetUser
-  }, dispatch);
-}
-
-export default connect(null, mapDispatchToProps)(Header);
+export default connect(
+  null,
+  dispatch => ({ setState: state => dispatch(setState(state)) })
+)(Header);

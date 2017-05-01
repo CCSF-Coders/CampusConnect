@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
-import Login from '../../containers/Login';
-import Welcome from '../../components/Welcome';
 import { setState } from '../../state';
+import Header from '../../components/Header';
 
-class Home extends React.Component {
+class YourClubs extends React.Component {
   render() {
-    let { state } = this.props;
-    let Component = state.user ? Welcome : Login;
+    // let { state } = this.props;
     return (
-      <Component />
+      <div>
+        <Header />
+        <h1>Your Clubs</h1>
+      </div>
     );
   }
 }
@@ -18,4 +18,4 @@ class Home extends React.Component {
 export default connect(
   state => ({ state }),
   dispatch => ({ setState: state => dispatch(setState(state)) })
-)(Home);
+)(YourClubs);

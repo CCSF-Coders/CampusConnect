@@ -3,3 +3,11 @@
   justify-content: center;
   align-items: center;
 }
+
+.button {
+  cursor: pointer;
+}
+
+.rbc-toolbar {
+  flex-direction: row;
+}

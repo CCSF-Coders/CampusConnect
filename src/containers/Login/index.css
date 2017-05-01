@@ -3,6 +3,7 @@
   align-items: center;
   background-image: url(../../assets/CCSFClubs.png);
   background-size: cover;
+  background-position: center;
   flex: 1;
   color: white
 }
