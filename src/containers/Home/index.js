@@ -8,6 +8,7 @@ import { setState } from '../../state';
 class Home extends React.Component {
   render() {
     let { state } = this.props;
+    console.log('STATE USER', state.user)
     let Component = state.user ? Welcome : Login;
     return (
       <Component />

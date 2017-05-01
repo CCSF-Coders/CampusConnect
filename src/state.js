@@ -3,10 +3,9 @@ import { createStore } from 'redux';
 const SET_STATE = 'SET_STATE';
 
 const defaultState = {
-  user: {
-    name: 'Michael Leung'
-  },
-  clubs: []
+  user: null,
+  clubs: [],
+  googleLoaded: false
 };
 
 const setState = function(state) {

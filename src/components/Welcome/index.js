@@ -15,14 +15,13 @@ let components = {
   event: null, // used by each view (Month, Day, Week)
   toolbar: null,
   agenda: {
-       event: null // with the agenda view use a different component to render events
+   event: null // with the agenda view use a different component to render events
   }
 }
 
 class Welcome extends React.Component {
   render() {
     // let { state } = this.props;
-    console.log('welcome')
     return (
       <div className="Welcome">
         <Header />
