@@ -4,6 +4,23 @@ from rest_framework import serializers, exceptions
 from django.core.exceptions import ObjectDoesNotExist
 
 
+def validateTokenWithStudent(token, student):
+    """
+    
+    :param str token: 
+    :param Student student: 
+    :return: 
+    """
+    try:
+        token_student = Token.objects.get(key=token).user.student  # type: Student
+        if token_student == student:
+            return True
+        else:
+            raise exceptions.AuthenticationFailed(detail="Token Error: Doesn't match the Student you are trying to edit", code=None)
+    except ObjectDoesNotExist:
+        raise exceptions.AuthenticationFailed(detail="Token Error: User does not exist", code=None)
+
+
 def validateOfficer(token, club):
     """
     This will check if the user is an officer of the specified club. 
@@ -21,9 +38,9 @@ def validateOfficer(token, club):
         if club == student.officer_of_club:
             return True
         else:
-            raise exceptions.AuthenticationFailed(detail="Not an officer of the club", code=None)
+            raise exceptions.AuthenticationFailed(detail="Token Error: Not an officer of the club", code=None)
     except ObjectDoesNotExist:
-        raise exceptions.AuthenticationFailed(detail="User does not exist", code=None)
+        raise exceptions.AuthenticationFailed(detail="Token Error: User does not exist", code=None)
 
 
 def validateStaff(token):
@@ -39,9 +56,9 @@ def validateStaff(token):
         if Token.objects.get(key=token).user.is_staff:
             return True
         else:
-            raise exceptions.AuthenticationFailed(detail="The user is not staff", code=None)
+            raise exceptions.AuthenticationFailed(detail="Token Error: The user is not staff", code=None)
     except ObjectDoesNotExist:
-        raise exceptions.AuthenticationFailed(detail="User does not exist", code=None)
+        raise exceptions.AuthenticationFailed(detail="Token Error: User does not exist", code=None)
 
 
 def validateOfficerOrStaff(token, club):
@@ -60,9 +77,16 @@ def validateOfficerOrStaff(token, club):
         if club == student.officer_of_club or Token.objects.get(key=token).user.is_staff:
             return True
         else:
-            raise exceptions.AuthenticationFailed(detail="Not an officer of the club", code=None)
+            raise exceptions.AuthenticationFailed(detail="Token Error: Not an officer of the club", code=None)
     except ObjectDoesNotExist:
-        raise exceptions.AuthenticationFailed(detail="User does not exist", code=None)
+        raise exceptions.AuthenticationFailed(detail="Token Error: User does not exist", code=None)
+
+
+def getStudent(id):
+    try:
+        return Student.objects.get(id=id)
+    except ObjectDoesNotExist:
+        raise exceptions.AuthenticationFailed(detail="Student \"" + str(id) + "\" does not exist", code=None)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -72,16 +96,30 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
+    token = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = Student
         fields = '__all__'
 
+    def update(self, instance, validated_data):
+        '''        
+        :type instance: Student
+        :type validated_data: dict
+        '''
+
+        validateTokenWithStudent(validated_data['token'], instance)
+        validated_data.pop('token')
+
+        return super(StudentSerializer, self).update(instance, validated_data)
+
 
 class BaseClubSerializer(serializers.ModelSerializer):
     token = serializers.CharField(write_only=True, required=True)
     name = Club.name
+    add_officer = serializers.IntegerField(write_only=True, required=False)
+    remove_officer = serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
         model = Club
@@ -95,6 +133,17 @@ class BaseClubSerializer(serializers.ModelSerializer):
 
         validateOfficerOrStaff(validated_data['token'], instance)
         validated_data.pop('token')
+
+        if 'add_officer' in validated_data:
+            student_to_add = getStudent(validated_data['add_officer'])
+            instance.officers.add(student_to_add)
+            validated_data.pop('add_officer', None)
+
+        if 'remove_officer' in validated_data:
+            student_to_add = getStudent(validated_data['remove_officer'])
+            instance.officers.add(student_to_add)
+            validated_data.pop('remove_officer', None)
+
         return super(BaseClubSerializer, self).update(instance, validated_data)
 
     def create(self, validated_data):
@@ -103,7 +152,10 @@ class BaseClubSerializer(serializers.ModelSerializer):
         '''
 
         validateStaff(validated_data['token'])
-        validated_data.pop('token')
+        validated_data.pop('token', None)
+        validated_data.pop('add_officer', None)
+        validated_data.pop('remove_officer', None)
+
         return super(BaseClubSerializer, self).create(validated_data)
 
 
@@ -127,7 +179,7 @@ class EventSerializer(serializers.ModelSerializer):
         :type validated_data: dict
         '''
 
-        club = Club.objects.get(id=instance.club_id)
+        club = Club.objects.get(id=instance.club.id)
         validateOfficerOrStaff(validated_data['token'], club)
         validated_data.pop('token')
 

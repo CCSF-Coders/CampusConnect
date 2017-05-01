@@ -42,7 +42,6 @@ except ImportError:
 DEBUG = True
 
 ALLOWED_HOSTS = []
-#AUTH_USER_MODEL = "campus-connect.StudentUser"
 
 # Application definition
 
@@ -53,10 +52,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'django.contrib.admindocs',
+    # 'django.contrib.admindocs',
     'rest_framework',
     'rest_framework.authtoken',
     'campus-connect',
+    # For Cross Origin Resource Sharing
+    'corsheaders',
 
 ]
 
@@ -68,6 +69,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # For Cross Origin Resource Sharing
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'campus-connect.urls'
@@ -136,3 +140,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# For Cross Origin Resource Sharing
+CORS_ORIGIN_ALLOW_ALL = True

@@ -24,13 +24,13 @@ All: `pip install Django djangorestframework coreapi docutils`
 
 ## First time running
 `python manage.py makemigrations campus-connect`  
-Generates SQL for the custom database
+Generates SQL for the custom models
 
 `python manage.py migrate`  
 This will generate the database.
 
 `python manage.py createsuperuser`  
-This will create a super user, which has full access to edit everything on the site using http://127.0.0.1:8000/admin/
+This will create a super user, which has full access to edit everything on the site using [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
 
 
 ## Starting the server

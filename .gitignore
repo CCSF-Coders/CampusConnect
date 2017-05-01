@@ -20,3 +20,4 @@ yarn-error.log*
 django-backend/.idea/workspace.xml
 django-backend/campus-connect/secret_key.py
 django-backend/campus-connect/__pycache__/
+django-backend/campus-connect/migrations*/

@@ -65,7 +65,7 @@ class ClubViewSet(mixins.CreateModelMixin,
     
     POST:
     /rest-api/clubs
-    This will create a club if the user is flagged as staff.
+    This will create a club if the user is flagged as staff. 
     required params: token, name
     optional params: email, website, meeting times
     
@@ -73,7 +73,7 @@ class ClubViewSet(mixins.CreateModelMixin,
     /rest-api/clubs/<club_id>
     This will update a club if the user is flagged as staff or an officer of that club.
     required params: token
-    optional params: name, email, website, meeting_times  
+    optional params: name, email, website, meeting_times, add_officer, remove_officer
     
     """
 
