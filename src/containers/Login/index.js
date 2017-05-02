@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import GoogleLogin from 'react-google-login';
-
 import { setState } from '../../state';
 
 import './index.css';
@@ -13,14 +11,34 @@ class Login extends React.Component {
         <h1>CCSF Connect</h1>
         <h3>Discover, Interact, and Explore</h3>
         <p>An app created for CCSF Clubs</p>
-        <GoogleLogin
-          clientId="310141997963-25c8dvqieo2um40i81s6is01u7ivlcjr.apps.googleusercontent.com"
-          buttonText="Login"
-          onSuccess={this.onSignIn}
-          onFailure={e => console.log('e', e)}
-        />
+        <div id="my-signin2"></div>
       </div>
     );
+  }
+
+  componentDidMount() {
+    window.addEventListener('google-loaded', () => {
+      this.props.setState({ googleLoaded: true });
+      this.renderButton();
+    });
+
+    if (this.props.googleLoaded) {
+      this.renderButton();
+    }
+  }
+
+  renderButton() {
+    console.log('rendering button')
+    // https://developers.google.com/identity/sign-in/web/build-button
+    window.gapi.signin2.render('my-signin2', {
+      'scope': 'profile email',
+      'width': 240,
+      'height': 50,
+      'longtitle': true,
+      'theme': 'light',
+      'onsuccess': this.onSignIn,
+      'onfailure': e => console.log('error', e)
+    });
   }
 
   onSignIn = googleUser => {

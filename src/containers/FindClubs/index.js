@@ -21,13 +21,10 @@ class FindClubs extends React.Component {
   }
 
   componentDidMount() {
-    // fetch('http://127.0.0.1:8000/rest-api/clubs/?format=json')
-    //   .then(res => res.json())
-    //   .then(data => console.log('data', data))
-    //   .catch(e => console.log('e', e));
-
-
-      this.props.setState({ clubs: [ { id: 1, officers: [ ], members: [ ], name: "CCSF Coders", email: "", website: "", meeting_times: "" } ] });
+    fetch('http://127.0.0.1:8000/rest-api/clubs/?format=json')
+      .then(res => res.json())
+      .then(clubs => this.props.setState({ clubs }))
+      .catch(e => console.log('e', e));
   }
 }
 

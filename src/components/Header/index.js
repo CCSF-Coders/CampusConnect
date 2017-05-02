@@ -5,6 +5,12 @@ import { setState } from '../../state';
 import './index.css';
 
 class Header extends React.Component {
+  componentWillMount() {
+    if (!this.props.state.user) {
+      window.location.replace('http://localhost:3000/');
+    }
+  }
+
   render() {
     return (
       <div id="Header">
@@ -31,15 +37,15 @@ class Header extends React.Component {
   }
 
   signOut() {
-    var auth2 = window.gapi.auth2.getAuthInstance();
-    auth2.signOut().then(() => {
-      console.log('User signed out.');
-      this.props.resetUser();
+    var auth = window.gapi.auth2.getAuthInstance();
+    auth.signOut().then(() => {
+      this.props.setState({ user: null });
+      window.location.replace('http://localhost:3000/');
     });
   }
 }
 
 export default connect(
-  null,
+  state => ({ state }),
   dispatch => ({ setState: state => dispatch(setState(state)) })
 )(Header);

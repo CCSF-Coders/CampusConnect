@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <title>CampusConnect</title>
+    <meta name="google-signin-client_id" content="310141997963-25c8dvqieo2um40i81s6is01u7ivlcjr.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js?onload=triggerGoogleLoaded" sync defer></script>
+    <script type="text/javascript">
+      function triggerGoogleLoaded() {
+        window.dispatchEvent(new Event('google-loaded'));
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

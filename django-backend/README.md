@@ -17,9 +17,10 @@
 Django - `pip install Django`  
 Rest Framework - `pip install djangorestframework`  
 Rest Documentation - `pip install coreapi`  
-Docutils - `pip install docutils`
+Docutils - `pip install docutils`  
+CORS - `pip install django-cors-headers`  
 
-All: `pip install Django djangorestframework coreapi docutils`
+All: `pip install Django djangorestframework coreapi docutils django-cors-headers`
 
 
 ## First time running
