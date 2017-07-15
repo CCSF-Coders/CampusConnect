@@ -5,12 +5,6 @@ import { setState } from '../../state';
 import './index.css';
 
 class Header extends React.Component {
-  componentWillMount() {
-    if (!this.props.state.user) {
-      window.location.replace('http://localhost:3000/');
-    }
-  }
-
   render() {
     return (
       <div id="Header">

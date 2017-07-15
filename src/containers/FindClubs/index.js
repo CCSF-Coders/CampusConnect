@@ -6,14 +6,14 @@ import Header from '../../components/Header';
 class FindClubs extends React.Component {
   render() {
     let { state } = this.props;
-    console.log('find')
+
     return (
       <div>
         <Header />
         <h1>Find Clubs</h1>
         {state.clubs.map((club, i) => {
           return (
-            <h3>{club.name}</h3>
+            <h3 key={i}>{club.name}</h3>
           );
         })}
       </div>
@@ -23,7 +23,10 @@ class FindClubs extends React.Component {
   componentDidMount() {
     fetch('http://127.0.0.1:8000/rest-api/clubs/?format=json')
       .then(res => res.json())
-      .then(clubs => this.props.setState({ clubs }))
+      .then(clubs => {
+        console.log('CLUBS', clubs);
+        this.props.setState({ clubs });
+      })
       .catch(e => console.log('e', e));
   }
 }

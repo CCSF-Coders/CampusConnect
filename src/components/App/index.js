@@ -18,6 +18,7 @@ class App extends React.Component {
             <Route exact path="/" component={Home} />
             <Route path="/findclubs" component={FindClubs} />
             <Route path="/yourclubs" component={YourClubs} />
+            <Route path="/*" component={Home} />
           </Switch>
         </BrowserRouter>
       </Provider>
