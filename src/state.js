@@ -9,7 +9,6 @@ const defaultState = {
 };
 
 const setState = function(state) {
-  console.log('STATE', state)
   return {
     type: SET_STATE,
     payload: state
